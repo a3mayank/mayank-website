@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #eeece9;
+    color: #1d1f24;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background-image: radial-gradient(rgba(29, 31, 36, 0.08) 1.5px, transparent 1.5px);
+    background-size: 24px 24px;
+  }
+
+  ::selection {
+    background-color: #f7a501;
+    color: #1d1f24;
+  }
+}
+
+/* Chunky Button Utility */
+.btn-retro {
+  background-color: #f7a501;
+  color: #1d1f24;
+  font-weight: 700;
+  border: 2px solid #1d1f24;
+  box-shadow: 3px 3px 0px 0px #1d1f24;
+  transition: all 0.1s ease;
+}
+
+.btn-retro:hover {
+  background-color: #ea9b00;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px 0px #1d1f24;
+}
+
+.btn-retro:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px 0px #1d1f24;
+}
+
+.btn-retro-secondary {
+  background-color: #ffffff;
+  color: #1d1f24;
+  font-weight: 700;
+  border: 2px solid #1d1f24;
+  box-shadow: 3px 3px 0px 0px #1d1f24;
+  transition: all 0.1s ease;
+}
+
+.btn-retro-secondary:hover {
+  background-color: #f4f1ea;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px 0px #1d1f24;
+}
+
+.btn-retro-secondary:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px 0px #1d1f24;
+}
+
+/* Retro Card Utility */
+.card-retro {
+  background-color: #ffffff;
+  border: 2px solid #1d1f24;
+  box-shadow: 4px 4px 0px 0px #1d1f24;
+  border-radius: 0.75rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card-retro:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px 0px #1d1f24;
+}
+
+/* Minimal Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #eeece9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d0cdc7;
+  border: 2px solid #eeece9;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #1d1f24;
+}
