@@ -20,13 +20,15 @@ export interface GoogleFormConfig {
 }
 
 export const GOOGLE_FORM_CONFIG: GoogleFormConfig = {
-  // Replace with your Google Form formResponse endpoint:
-  // e.g. "https://docs.google.com/forms/d/e/1FAIpQLSc.../formResponse"
-  actionUrl: (import.meta.env.VITE_GOOGLE_FORM_URL as string) || 'https://docs.google.com/forms/d/e/1FAIpQLSc_YOUR_FORM_ID_HERE/formResponse',
+  // Connected to user's "Client Lead Query" Google Form:
+  actionUrl:
+    (import.meta.env.VITE_GOOGLE_FORM_URL as string) ||
+    'https://docs.google.com/forms/d/e/1FAIpQLSdqJhT_emWR8l_U-_hXUPtIDq3zVDRs7Kgmy8HAgWUq2MuClw/formResponse',
   entries: {
-    name: (import.meta.env.VITE_GOOGLE_FORM_ENTRY_NAME as string) || 'entry.1000001',
-    email: (import.meta.env.VITE_GOOGLE_FORM_ENTRY_EMAIL as string) || 'entry.1000002',
-    projectType: (import.meta.env.VITE_GOOGLE_FORM_ENTRY_PROJECT_TYPE as string) || 'entry.1000003',
-    message: (import.meta.env.VITE_GOOGLE_FORM_ENTRY_MESSAGE as string) || 'entry.1000004',
+    name: (import.meta.env.VITE_GOOGLE_FORM_ENTRY_NAME as string) || 'entry.397200275',
+    email: (import.meta.env.VITE_GOOGLE_FORM_ENTRY_EMAIL as string) || 'entry.1759989842',
+    projectType: (import.meta.env.VITE_GOOGLE_FORM_ENTRY_PROJECT_TYPE as string) || 'entry.1872628605',
+    message: (import.meta.env.VITE_GOOGLE_FORM_ENTRY_MESSAGE as string) || 'entry.1272734912',
   },
 };
+
