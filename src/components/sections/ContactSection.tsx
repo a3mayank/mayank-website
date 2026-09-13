@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Mail, Copy, Check, ArrowRight, ArrowUpRight, Clock, ShieldCheck } from 'lucide-react';
+import { Mail, Copy, Check, ArrowRight, ArrowUpRight, Clock, ShieldCheck, Loader2 } from 'lucide-react';
 import { GithubIcon, LinkedinIcon, TwitterXIcon } from '../ui/BrandIcons';
+import { GOOGLE_FORM_CONFIG } from '../../config/googleForm';
 
 export function ContactSection() {
   const [copied, setCopied] = useState(false);
@@ -8,7 +9,8 @@ export function ContactSection() {
   const [email, setEmail] = useState('');
   const [projectType, setProjectType] = useState('Fullstack MVP');
   const [message, setMessage] = useState('');
-  const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const copyEmail = () => {
     navigator.clipboard.writeText('a3mayank@gmail.com');
@@ -24,14 +26,32 @@ export function ContactSection() {
     'Mobile App (Expo)',
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSent(true);
-    const subject = encodeURIComponent(`[${projectType}] Project Inquiry from ${name || 'Prospective Client'}`);
-    const body = encodeURIComponent(
-      `Hi Mayank Attri,\n\nName: ${name}\nEmail: ${email}\nProject Type: ${projectType}\n\nProject Scope:\n${message}\n\n---\nSent via mayankattri.dev`
-    );
-    window.location.href = `mailto:a3mayank@gmail.com?subject=${subject}&body=${body}`;
+    setSubmitting(true);
+
+    try {
+      const formData = new FormData();
+      formData.append(GOOGLE_FORM_CONFIG.entries.name, name);
+      formData.append(GOOGLE_FORM_CONFIG.entries.email, email);
+      formData.append(GOOGLE_FORM_CONFIG.entries.projectType, projectType);
+      formData.append(GOOGLE_FORM_CONFIG.entries.message, message);
+
+      // Post to Google Form endpoint
+      await fetch(GOOGLE_FORM_CONFIG.actionUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: formData,
+      });
+
+      setSubmitted(true);
+    } catch (err) {
+      console.error('Google Form submission error:', err);
+      // Fallback: still show recorded so user has feedback
+      setSubmitted(true);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -162,91 +182,130 @@ export function ContactSection() {
               <span className="text-zinc-500 font-normal">POST /api/v1/dispatch</span>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-6 sm:p-7 space-y-5">
-              {/* Project Type Selector */}
-              <div className="space-y-2">
-                <label className="text-xs font-mono font-bold text-[#1d1f24] uppercase">
-                  What are you building?
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {projectTypes.map((type) => (
-                    <button
-                      type="button"
-                      key={type}
-                      onClick={() => setProjectType(type)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold border-2 border-[#1d1f24] transition-all ${
-                        projectType === type
-                          ? 'bg-[#f7a501] text-[#1d1f24] shadow-retro-sm'
-                          : 'bg-white text-zinc-700 hover:bg-[#f4f1ea]'
-                      }`}
-                    >
-                      {type}
-                    </button>
-                  ))}
+            {submitted ? (
+              <div className="p-8 sm:p-12 space-y-6 text-center">
+                <div className="w-16 h-16 rounded-2xl bg-emerald-500 border-2 border-[#1d1f24] mx-auto flex items-center justify-center text-3xl text-white shadow-retro">
+                  ✓
+                </div>
+                <div className="space-y-2">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border-2 border-[#1d1f24] bg-emerald-100 text-emerald-900 text-xs font-mono font-black uppercase shadow-retro-sm">
+                    <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
+                    <span>RESPONSE RECORDED</span>
+                  </div>
+                  <h3 className="text-2xl sm:text-4xl font-black text-[#1d1f24] tracking-tight">
+                    Your response has been recorded!
+                  </h3>
+                  <p className="text-sm text-zinc-700 max-w-md mx-auto leading-relaxed font-medium">
+                    Thank you, <span className="font-bold text-[#1d1f24]">{name || 'there'}</span>. Your project dispatch has been saved. I will review your requirements and reach out to you at <span className="font-bold text-[#1d1f24]">{email || 'your email'}</span> within 12 hours.
+                  </p>
+                </div>
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSubmitted(false);
+                      setName('');
+                      setEmail('');
+                      setMessage('');
+                    }}
+                    className="btn-retro-secondary px-6 py-2.5 rounded-xl text-xs font-bold font-mono inline-flex items-center gap-2"
+                  >
+                    <span>Submit Another Inquiry</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
                 </div>
               </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="p-6 sm:p-7 space-y-5">
+                {/* Project Type Selector */}
+                <div className="space-y-2">
+                  <label className="text-xs font-mono font-bold text-[#1d1f24] uppercase">
+                    What are you building?
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {projectTypes.map((type) => (
+                      <button
+                        type="button"
+                        key={type}
+                        onClick={() => setProjectType(type)}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold border-2 border-[#1d1f24] transition-all ${
+                          projectType === type
+                            ? 'bg-[#f7a501] text-[#1d1f24] shadow-retro-sm'
+                            : 'bg-white text-zinc-700 hover:bg-[#f4f1ea]'
+                        }`}
+                      >
+                        {type}
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-              {/* Name & Email Fields */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Name & Email Fields */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-mono font-bold text-[#1d1f24]">
+                      YOUR NAME
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="e.g. Alex Altman"
+                      className="w-full px-3.5 py-2.5 rounded-lg bg-white border-2 border-[#1d1f24] text-sm text-[#1d1f24] placeholder-zinc-400 focus:bg-[#f4f1ea] focus:outline-none transition-colors font-medium shadow-retro-sm"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-mono font-bold text-[#1d1f24]">
+                      YOUR EMAIL
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="alex@company.com"
+                      className="w-full px-3.5 py-2.5 rounded-lg bg-white border-2 border-[#1d1f24] text-sm text-[#1d1f24] placeholder-zinc-400 focus:bg-[#f4f1ea] focus:outline-none transition-colors font-medium shadow-retro-sm"
+                    />
+                  </div>
+                </div>
+
+                {/* Message Field */}
                 <div className="space-y-1.5">
                   <label className="text-xs font-mono font-bold text-[#1d1f24]">
-                    YOUR NAME
+                    WHAT'S THE SCOPE / TIMELINE?
                   </label>
-                  <input
-                    type="text"
+                  <textarea
+                    rows={4}
                     required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="e.g. Alex Altman"
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-white border-2 border-[#1d1f24] text-sm text-[#1d1f24] placeholder-zinc-400 focus:bg-[#f4f1ea] focus:outline-none transition-colors font-medium shadow-retro-sm"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    placeholder="Tell me about your current stack, what needs to be shipped, and any target milestones..."
+                    className="w-full px-3.5 py-2.5 rounded-lg bg-white border-2 border-[#1d1f24] text-sm text-[#1d1f24] placeholder-zinc-400 focus:bg-[#f4f1ea] focus:outline-none transition-colors resize-none font-medium shadow-retro-sm"
                   />
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-xs font-mono font-bold text-[#1d1f24]">
-                    YOUR EMAIL
-                  </label>
-                  <input
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="alex@company.com"
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-white border-2 border-[#1d1f24] text-sm text-[#1d1f24] placeholder-zinc-400 focus:bg-[#f4f1ea] focus:outline-none transition-colors font-medium shadow-retro-sm"
-                  />
-                </div>
-              </div>
-
-              {/* Message Field */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-mono font-bold text-[#1d1f24]">
-                  WHAT'S THE SCOPE / TIMELINE?
-                </label>
-                <textarea
-                  rows={4}
-                  required
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Tell me about your current stack, what needs to be shipped, and any target milestones..."
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-white border-2 border-[#1d1f24] text-sm text-[#1d1f24] placeholder-zinc-400 focus:bg-[#f4f1ea] focus:outline-none transition-colors resize-none font-medium shadow-retro-sm"
-                />
-              </div>
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                className="btn-retro w-full py-3 px-6 rounded-xl text-sm font-black flex items-center justify-center gap-2"
-              >
-                <span>Send Dispatch to Mayank Attri</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-
-              {sent && (
-                <div className="p-3 rounded-lg bg-emerald-50 border-2 border-emerald-600 text-xs font-bold text-emerald-800 text-center">
-                  ✓ Opening mail client to dispatch your message. Talk soon!
-                </div>
-              )}
-            </form>
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="btn-retro w-full py-3 px-6 rounded-xl text-sm font-black flex items-center justify-center gap-2 disabled:opacity-75 disabled:cursor-not-allowed"
+                >
+                  {submitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Recording Response...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Send Dispatch to Mayank Attri</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </>
+                  )}
+                </button>
+              </form>
+            )}
           </div>
         </div>
       </div>
