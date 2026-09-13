@@ -36,8 +36,8 @@ export const projects: ProjectItem[] = [
     category: 'Backend & Systems',
     tech: ['FastAPI (Python 3.13)', 'Next.js 16', 'React Native (Expo 54)', 'PostgreSQL 16', 'Redis 7', 'Terraform AWS'],
     liveUrl: 'http://talentedrituinsan.com/',
-    iosUrl: 'https://apps.apple.com/app/talented-ritu-insan',
-    androidUrl: 'https://play.google.com/store/apps/details?id=co.diy14.goxgp',
+    iosUrl: 'https://apps.apple.com/us/app/talented-ritu-insan/id6670782263',
+    androidUrl: 'https://play.google.com/store/apps/details?id=co.diy14.goxgp&hl=en_IN',
     year: '2024',
     image: '/projects/talented-ritu-insan.jpg'
   },
