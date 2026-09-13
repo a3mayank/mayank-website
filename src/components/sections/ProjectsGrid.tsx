@@ -159,6 +159,17 @@ export function ProjectsGrid() {
                       </a>
                     )}
 
+                    {project.iosComingSoon && (
+                      <div
+                        onClick={(e) => e.stopPropagation()}
+                        className="px-3 py-2 rounded-lg text-xs flex items-center gap-1.5 font-bold font-mono border-2 border-[#1d1f24] bg-white text-zinc-700 shadow-retro-sm cursor-default"
+                        title={`${project.title} iOS app coming soon`}
+                      >
+                        <AppleIcon className="w-3.5 h-3.5 text-[#1d1f24]" />
+                        <span>iOS (Coming Soon)</span>
+                      </div>
+                    )}
+
                     {project.androidUrl && (
                       <a
                         href={project.androidUrl}
@@ -173,7 +184,18 @@ export function ProjectsGrid() {
                       </a>
                     )}
 
-                    {!project.liveUrl && !project.iosUrl && !project.androidUrl && (
+                    {project.androidComingSoon && (
+                      <div
+                        onClick={(e) => e.stopPropagation()}
+                        className="px-3 py-2 rounded-lg text-xs flex items-center gap-1.5 font-bold font-mono border-2 border-[#1d1f24] bg-white text-zinc-700 shadow-retro-sm cursor-default"
+                        title={`${project.title} Android app coming soon`}
+                      >
+                        <GooglePlayIcon className="w-3.5 h-3.5 text-[#1d1f24]" />
+                        <span>Android (Coming Soon)</span>
+                      </div>
+                    )}
+
+                    {!project.liveUrl && !project.iosUrl && !project.androidUrl && !project.iosComingSoon && !project.androidComingSoon && (
                       <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold text-zinc-600 bg-[#eeece9] border border-[#1d1f24]/20">
                         <span className="w-2 h-2 rounded-full bg-emerald-500" />
                         <span>Production Architecture</span>

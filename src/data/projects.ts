@@ -8,6 +8,8 @@ export interface ProjectItem {
   liveUrl?: string;
   iosUrl?: string;
   androidUrl?: string;
+  iosComingSoon?: boolean;
+  androidComingSoon?: boolean;
   year: string;
   image?: string;
   logo?: string;
@@ -22,8 +24,8 @@ export const projects: ProjectItem[] = [
     category: 'Fullstack / Mobile',
     tech: ['FastAPI (Python)', 'Next.js 16', 'React Native', 'PostgreSQL', 'Docker', 'AWS ECS'],
     liveUrl: 'https://app.trenzform.com',
-    iosUrl: 'https://apps.apple.com/app/trenzform',
-    androidUrl: 'https://play.google.com/store/apps/details?id=com.trenzform',
+    iosComingSoon: true,
+    androidComingSoon: true,
     year: '2024',
     image: '/projects/trenzform.jpg',
     logo: '/projects/trenzform-logo.png'
